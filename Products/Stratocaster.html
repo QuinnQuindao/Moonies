@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Clifton Guitars</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+    <link rel="apple-touch-icon" sizes="180x180" href="./images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon-16x16.png">
+    <link rel="manifest" href="./images/site.webmanifest">
+</head>
+
+<body class="body-color">
+    <div class="navbar-container navbar-color">
+        <header class="logo">
+            <div class="logo-header">
+                <a href="../index.html">
+                    <img src="./images/logo.png" class="logo-icon" alt="Guitar Logo">
+                </a>
+                <a href="../index.html"><span class="name">Clifton Guitars</span></a>
+            </div>
+            <nav class="navbar">
+                <ul class="nav-ul">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../about.html">About Us</a></li>
+                    <li><a href="../products.html">Products</a></li>
+                    <li><a href="../contact.html">Contact Us</a></li>
+                    <li><a href="../signin.html"><img src="./images/user.png" alt="Sign in button" class="user-logo" height="20px"></a></li>
+          <li><a href="../cart.html"><img src="../images/cart.png" alt="cart" class="user-logo" height="20px"></a></li>
+                </ul>
+            </nav>
+        </header>
+    </div>
+
+    <div class="your-product-container">
+        <div class="your-product-image">
+            <img src="./images/Stratocaster (Electric Guitar).JPG" alt="Product Image">
+        </div>
+        <div class="your-product-details">
+            <h2 class="your-product-title">Stratocaster (Electric Guitar)</h2>
+            <p class="your-product-description">₱ 3,490</p>
+            <div class="your-product-ratings">
+                Ratings: ★★★★★
+            </div>
+            <div class="your-quantity-controls">
+                <button class="your-quantity-btn" id="your-remove-btn" onclick="decrementQuantity()">-</button>
+                <span class="your-quantity" id="your-quantity">1</span>
+                <button class="your-quantity-btn" id="your-add-btn" onclick="incrementQuantity()">+</button>
+            </div>
+            <button class="your-add-to-cart-btn" onclick="addToCart()">Add to Cart</button>
+        </div>
+    </div>
+
+    <script>
+        function incrementQuantity() {
+            var quantityElement = document.getElementById('your-quantity');
+            var currentQuantity = parseInt(quantityElement.textContent);
+            quantityElement.textContent = currentQuantity + 1;
+        }
+
+        function decrementQuantity() {
+            var quantityElement = document.getElementById('your-quantity');
+            var currentQuantity = parseInt(quantityElement.textContent);
+            if (currentQuantity > 1) {
+                quantityElement.textContent = currentQuantity - 1;
+            }
+        }
+
+        function addToCart() {
+            var productName = document.querySelector('.your-product-title').textContent;
+            var quantity = parseInt(document.querySelector('.your-quantity').textContent);
+
+            // Extract the price from the description element
+            var priceElement = document.querySelector('.your-product-description');
+            var priceText = priceElement.textContent.trim();
+
+            // Remove commas and other non-numeric characters, then convert to float
+            var price = parseFloat(priceText.replace(/[^\d.]/g, ''));
+
+            // Retrieve existing cart items from sessionStorage or initialize an empty array
+            var cartProducts = JSON.parse(sessionStorage.getItem('cartProducts')) || [];
+
+            // Add the current product to the cart
+            var product = {
+                name: productName,
+                quantity: quantity,
+                price: price,
+                image: "./images/Stratocaster (Electric Guitar).JPG" // Adjust the image path accordingly
+            };
+
+            cartProducts.push(product);
+
+            // Store the updated cart items back to sessionStorage
+            sessionStorage.setItem('cartProducts', JSON.stringify(cartProducts));
+
+            // Redirect to the cart page
+            window.location.href = '../cart.html';
+        }
+    </script>
+    </div>
+
+    <footer class="footer-color about-footer">
+        <p>&copy; 2023 Clifton Guitars. All rights reserved.</p>
+    </footer>
+
+</body>
+
+</html>

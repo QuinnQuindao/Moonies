@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Clifton Guitars</title>
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+    <link rel="apple-touch-icon" sizes="180x180" href="./images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon-16x16.png">
+    <link rel="manifest" href="./images/site.webmanifest">
+</head>
+
+<body class="body-color">
+    <div class="navbar-container navbar-color">
+        <header class="logo">
+            <div class="logo-header">
+                <a href="./index.html">
+                    <img src="./images/logo.png" class="logo-icon" alt="Guitar Logo">
+                </a>
+                <a href="./index.html"><span class="name">Clifton Guitars</span></a>
+            </div>
+            <nav class="navbar">
+                <ul class="nav-ul">
+                    <li><a href="./index.html">Home</a></li>
+                    <li><a href="./about.html">About Us</a></li>
+                    <li><a href="./products.html">Products</a></li>
+                    <li><a href="./contact.html">Contact Us</a></li>
+                    <li><a href="./signin.html"><img src="./images/user.png" alt="Sign in button" class="user-logo"
+                                height="20px"></a></li>
+                    <li><a href="./cart.html"><img src="./images/cart.png" alt="cart" class="user-logo"
+                                height="20px"></a></li>
+                </ul>
+            </nav>
+        </header>
+    </div>
+
+    <div class="cart-container">
+        <h2>Your Shopping Cart</h2>
+        <div id="cart-content"></div>
+        
+        <!-- Display total price -->
+        <p class="totalprice">Total Price: <span id="total-price">₱ 0.00</span></p>
+
+        <button class="products-button" onclick="checkout()">Checkout</button>
+    </div>
+
+    <footer class="footer-color about-footer">
+        <p>&copy; 2023 Clifton Guitars. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Retrieve cart products from sessionStorage
+            var cartProducts = JSON.parse(sessionStorage.getItem('cartProducts')) || [];
+    
+            // Get the container where cart products will be displayed
+            var cartContentContainer = document.getElementById('cart-content');
+    
+            // Get the container for the total price
+            var totalPriceContainer = document.getElementById('total-price');
+    
+            // Check if there are products in the cart
+            if (cartProducts.length > 0) {
+                // Create an unordered list to hold cart items
+                var cartList = document.createElement('ul');
+                cartList.classList.add('cart-list');
+    
+                // Loop through each product in the cart
+                cartProducts.forEach(function (product, index) {
+                    // Create list item for each product
+                    var cartItem = document.createElement('li');
+                    cartItem.classList.add('cart-item');
+    
+                    // Create image element for the product
+                    var productImage = document.createElement('img');
+                    productImage.src = product.image;
+                    productImage.alt = 'Product Image';
+                    productImage.classList.add('cart-product-image');
+    
+                    // Create div for product information
+                    var productInfo = document.createElement('div');
+                    productInfo.classList.add('cart-product-info');
+    
+                    // Create heading for product name
+                    var productName = document.createElement('h3');
+                    productName.classList.add('cart-product-name');
+                    productName.textContent = product.name;
+    
+                    // Create paragraph for product quantity
+                    var productQuantity = document.createElement('p');
+                    productQuantity.classList.add('cart-product-quantity');
+                    productQuantity.textContent = 'Quantity: ' + product.quantity;
+    
+                    // Create paragraph for product price
+                    var productPrice = document.createElement('p');
+                    productPrice.classList.add('cart-product-price');
+                    productPrice.textContent = 'Price: ₱ ' + (product.price * product.quantity).toFixed(2);
+    
+                    // Create button to remove the product
+                    var removeButton = document.createElement('button');
+                    removeButton.classList.add('cart-remove-button');
+                    removeButton.textContent = 'Remove';
+                    // Add an event listener to handle the removal of the product
+                    removeButton.addEventListener('click', function () {
+                        // Remove the product from the cartProducts array
+                        cartProducts.splice(index, 1);
+                        // Update sessionStorage with the modified cartProducts array
+                        sessionStorage.setItem('cartProducts', JSON.stringify(cartProducts));
+                        // Refresh the cart display
+                        updateCartDisplay();
+                    });
+    
+                    // Append elements to the cart item
+                    productInfo.appendChild(productName);
+                    productInfo.appendChild(productQuantity);
+                    productInfo.appendChild(productPrice);
+                    productInfo.appendChild(removeButton);
+    
+                    cartItem.appendChild(productImage);
+                    cartItem.appendChild(productInfo);
+    
+                    // Append the cart item to the cart list
+                    cartList.appendChild(cartItem);
+                });
+    
+                // Calculate total price
+                var totalPrice = cartProducts.reduce(function (total, product) {
+                    return total + (product.price * product.quantity);
+                }, 0).toFixed(2);
+    
+                // Display the total price
+                totalPriceContainer.textContent = '₱ ' + totalPrice;
+    
+                // Append the cart list to the cart content container
+                cartContentContainer.appendChild(cartList);
+            } else {
+                // If the cart is empty, display a message
+                var emptyCartMessage = document.createElement('p');
+                emptyCartMessage.textContent = 'Your cart is empty.';
+                cartContentContainer.appendChild(emptyCartMessage);
+            }
+    
+            // Function to update the cart display
+            function updateCartDisplay() {
+                // Clear the cart content container
+                cartContentContainer.innerHTML = '';
+    
+                // Check if there are products in the updated cart
+                if (cartProducts.length > 0) {
+                    // Create an unordered list to hold cart items
+                    var updatedCartList = document.createElement('ul');
+                    updatedCartList.classList.add('cart-list');
+    
+                    // Loop through each product in the updated cart
+                    cartProducts.forEach(function (product, index) {
+                        // Create list item for each product
+                        var updatedCartItem = document.createElement('li');
+                        updatedCartItem.classList.add('cart-item');
+    
+                        // Create image element for the product
+                        var updatedProductImage = document.createElement('img');
+                        updatedProductImage.src = product.image;
+                        updatedProductImage.alt = 'Product Image';
+                        updatedProductImage.classList.add('cart-product-image');
+    
+                        // Create div for product information
+                        var updatedProductInfo = document.createElement('div');
+                        updatedProductInfo.classList.add('cart-product-info');
+    
+                        // Create heading for product name
+                        var updatedProductName = document.createElement('h3');
+                        updatedProductName.classList.add('cart-product-name');
+                        updatedProductName.textContent = product.name;
+    
+                        // Create paragraph for product quantity
+                        var updatedProductQuantity = document.createElement('p');
+                        updatedProductQuantity.classList.add('cart-product-quantity');
+                        updatedProductQuantity.textContent = 'Quantity: ' + product.quantity;
+    
+                        // Create paragraph for product price
+                        var updatedProductPrice = document.createElement('p');
+                        updatedProductPrice.classList.add('cart-product-price');
+                        updatedProductPrice.textContent = 'Price: ₱ ' + (product.price * product.quantity).toFixed(2);
+    
+                        // Create button to remove the product
+                        var updatedRemoveButton = document.createElement('button');
+                        updatedRemoveButton.classList.add('cart-remove-button');
+                        updatedRemoveButton.textContent = 'Remove';
+                        // Add an event listener to handle the removal of the product
+                        updatedRemoveButton.addEventListener('click', function () {
+                            // Remove the product from the cartProducts array
+                            cartProducts.splice(index, 1);
+                            // Update sessionStorage with the modified cartProducts array
+                            sessionStorage.setItem('cartProducts', JSON.stringify(cartProducts));
+                            // Refresh the cart display
+                            updateCartDisplay();
+                        });
+    
+                        // Append elements to the updated cart item
+                        updatedProductInfo.appendChild(updatedProductName);
+                        updatedProductInfo.appendChild(updatedProductQuantity);
+                        updatedProductInfo.appendChild(updatedProductPrice);
+                        updatedProductInfo.appendChild(updatedRemoveButton);
+    
+                        updatedCartItem.appendChild(updatedProductImage);
+                        updatedCartItem.appendChild(updatedProductInfo);
+    
+                        // Append the updated cart item to the updated cart list
+                        updatedCartList.appendChild(updatedCartItem);
+                    });
+    
+                    // Calculate total price
+                    var updatedTotalPrice = cartProducts.reduce(function (total, product) {
+                        return total + (product.price * product.quantity);
+                    }, 0).toFixed(2);
+    
+                    // Display the updated total price
+                    totalPriceContainer.textContent = '₱ ' + updatedTotalPrice;
+    
+                    // Append the updated cart list to the cart content container
+                    cartContentContainer.appendChild(updatedCartList);
+                } else {
+                    // If the updated cart is empty, display a message
+                    var updatedEmptyCartMessage = document.createElement('p');
+                    updatedEmptyCartMessage.textContent = 'Your cart is empty.';
+                    cartContentContainer.appendChild(updatedEmptyCartMessage);
+                }
+            }
+    
+            // Add a click event listener to the Checkout button
+            var checkoutButton = document.querySelector('.products-button');
+            checkoutButton.addEventListener('click', checkout);
+    
+            // Function to handle the checkout button click
+            function checkout() {
+                // Display a pop-up with a thank you message
+                alert('Thank you for your order!');
+                
+                // Additional logic for completing the checkout process can be added here
+                // For example, sending an order to the server, clearing the cart, etc.
+    
+                // Clear the cart in sessionStorage
+                sessionStorage.removeItem('cartProducts');
+    
+                // Refresh the cart display
+                updateCartDisplay();
+            }
+        });
+    </script>
+
+</body>
+
+</html>
